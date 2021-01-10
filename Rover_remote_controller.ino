@@ -1,7 +1,7 @@
 #include "config.h"
 #include "setup.h"
 #include <TaskManager.h>
-#include "Joystick/Joystick.h"
+#include <Joystick.h>
 
 typedef TaskManager<TASK_QUEUE_SIZE> TaskManager_;
 TaskManager_ OS;
