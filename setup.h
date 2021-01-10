@@ -13,6 +13,28 @@ void Setup_timers(void){
   
 #if DEBUG_MODE == ENABLED	
 	Serial.println(F("Done!\0"));
+  Serial.println();
+#endif
+}
+
+void Setup_radio(void){
+
+#if DEBUG_MODE == ENABLED  
+  Serial.print(F("Setup radio...\0"));
+#endif
+
+  if (!LoRa.begin(frequency)) {
+    Serial.println("Starting LoRa failed!");
+    while (1);
+  }
+
+  LoRa.setSignalBandwidth(signal_bandwidth);
+  
+  LoRa.setTxPower(TX_Power);
+
+#if DEBUG_MODE == ENABLED  
+  Serial.println(F("Done!\0"));
+  Serial.println();
 #endif
 }
 

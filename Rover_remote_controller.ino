@@ -1,3 +1,4 @@
+#include <LoRa.h> // API https://github.com/sandeepmistry/arduino-LoRa/blob/master/API.md
 #include "config.h"
 #include "setup.h"
 #include <TaskManager.h>
@@ -21,6 +22,8 @@ void setup() {
 
   Serial.begin(9600);
   Setup_timers();
+  Setup_radio();
+  
   joystick.calibrateCenter();
   Tasks::checkJoystick();
 }
