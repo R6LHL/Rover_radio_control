@@ -4,10 +4,10 @@
 #define DEBUG_ENABLED
 //#define DEBUG_DISABLED
 
+#include <Arduino.h>
+
 typedef unsigned const char pin_number;
 typedef unsigned const char interval;
-
-#define BOARD (UNO328P_R3)
 
 unsigned const char TASK_QUEUE_SIZE = 5;
 
@@ -33,10 +33,9 @@ pin_number _MISO = 12;
 pin_number _MOSI = 11;
 pin_number _RST = 9;
 
-const unsigned long frequency = 433000000; //Hz
+const unsigned long frequency = 433000000;  //Hz
 unsigned const char TX_Power = 20;
 const bool async_mode = true;
-long signal_bandwidth = 12500;
-
+const long signal_bandwidth = 12500;              //Hz
 
 #endif //_CONFIG_H
