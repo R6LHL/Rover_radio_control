@@ -1,4 +1,3 @@
-#include "MCU_Mega_168.hpp"
 #include <LoRa.h> // API https://github.com/sandeepmistry/arduino-LoRa/blob/master/API.md
 #include "Tasks.h"
 

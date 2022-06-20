@@ -1,5 +1,7 @@
+/*
 #ifndef _MCU_Mega168_HPP
 #define _MCU_Mega168_HPP
+*/
 
 #include "RegisterBase.hpp"
 #include "IO_port_basic.hpp"
@@ -33,20 +35,20 @@ namespace MCU
 		// Sleep mode control register
 		struct SMCR_ : public RegisterBase<0x53> {};
 		
-		void Enable(void){SMCR_::SetBit(0);}
-		void Disable(void){SMCR_::ClearBit(0);}
-		void Go(void){}
+		static void Enable(void){SMCR_::SetBit(0);}
+		static void Disable(void){SMCR_::ClearBit(0);}
+		static void Go(void){}
 		
 		namespace Mode
 		{
-			void Idle(void)
+			static void Idle(void)
 			{
 				uint8_t config_byte = SMCR_::Get();
 				config_byte &= ~((1<<3)|(1<<2)|(1<<1));
 				SMCR_::Set(config_byte);
 			}
 		
-			void ADC_NoiseReduction(void)
+			static void ADC_NoiseReduction(void)
 			{
 				uint8_t config_byte = SMCR_::Get();
 				config_byte &= ~((1<<3)|(1<<2));
@@ -54,7 +56,7 @@ namespace MCU
 				SMCR_::Set(config_byte);
 			}
 		
-			void PowerDown(void)
+			static void PowerDown(void)
 			{
 				uint8_t config_byte = SMCR_::Get();
 				config_byte &= ~((1<<3)|(1<<1));
@@ -62,7 +64,7 @@ namespace MCU
 				SMCR_::Set(config_byte);
 			}
 		
-			void PowerSave(void)
+			static void PowerSave(void)
 			{
 				uint8_t config_byte = SMCR_::Get();
 				config_byte &= ~(1<<3);
@@ -70,7 +72,7 @@ namespace MCU
 				SMCR_::Set(config_byte);
 			}	
 		
-			void Standby(void)
+			static void Standby(void)
 			{
 				uint8_t config_byte = SMCR_::Get();
 				config_byte &= ~(1<<1);
@@ -78,7 +80,7 @@ namespace MCU
 				SMCR_::Set(config_byte);
 			}
 		
-			void ExtendedStandby(void)
+			static void ExtendedStandby(void)
 			{
 				uint8_t config_byte = SMCR_::Get();
 				config_byte |= ((1<<3)|(1<<2)|(1<<1));
@@ -139,20 +141,20 @@ namespace MCU
 		struct WDTCSR_ : public RegisterBase<0x60> {};
 		
 		//WDT interrupt flag functions
-		bool is_I_Flag_Set(void)
+		static bool is_I_Flag_Set(void)
 		{
 			if (!(WDTCSR_::GetBit(7))) return false;
 			else return true;
 		}
 		
-		void set_I_Flag(void){WDTCSR_::SetBit(7);}
-		void clear_I_Flag(void){WDTCSR_::SetBit(7);}
+		static void set_I_Flag(void){WDTCSR_::SetBit(7);}
+		static void clear_I_Flag(void){WDTCSR_::SetBit(7);}
 		//end WDT interrupt flag functions
 		
 		//WDT interrupt enable flag functions
-		void Interrupt_Enable(void){WDTCSR_::SetBit(6);}
-		void Interrupt_Disable(void){WDTCSR_::ClearBit(6);}
-		bool is_InterruptEnabled(void)
+		static void Interrupt_Enable(void){WDTCSR_::SetBit(6);}
+		static void Interrupt_Disable(void){WDTCSR_::ClearBit(6);}
+		static bool is_InterruptEnabled(void)
 		{
 			if (!(WDTCSR_::GetBit(6))) return false;
 			else return true;
@@ -160,18 +162,18 @@ namespace MCU
 		// end WDT interrupt enable flag functions
 		
 		// WDT Change enable flag functions
-		void Change_Enable(void){WDTCSR_::SetBit(4);}
-		void Change_Disable(void){WDTCSR_::ClearBit(4);}
+		static void Change_Enable(void){WDTCSR_::SetBit(4);}
+		static void Change_Disable(void){WDTCSR_::ClearBit(4);}
 		// end WDT Change enable flag functions
 		
 		// WDT System reset enable flag functions
-		void System_reset_enable(void)
+		static void System_reset_enable(void)
 		{
 			Change_Enable();
 			WDTCSR_::SetBit(3);
 		}
 		
-		void System_reset_disable(void)
+		static void System_reset_disable(void)
 		{
 			Change_Enable();
 			WDTCSR_::ClearBit(3);
@@ -181,7 +183,7 @@ namespace MCU
 		namespace Prescaler
 		{
 			//WDT prescaler functions
-			void set_2048(void) 				//16ms at 5v power supply
+		  static void set_2048(void) 				//16ms at 5v power supply
 			{
 				uint8_t byte_ = WDTCSR_ ::Get();
 				byte_ &= ~((1<<5)|(1<<2)|(1<<1)|(1<<0));
@@ -189,7 +191,7 @@ namespace MCU
 				WDTCSR_ ::Set(byte_);
 			}
 		
-			void set_4096(void)				//32ms at 5v power supply
+			static void set_4096(void)				//32ms at 5v power supply
 			{
 				uint8_t byte_ = WDTCSR_ ::Get();
 				byte_ &= ~((1<<5)|(1<<2)|(1<<1));
@@ -198,7 +200,7 @@ namespace MCU
 				WDTCSR_ ::Set(byte_);
 			}
 		
-			void set_8192(void)				//64ms at 5v power supply
+			static void set_8192(void)				//64ms at 5v power supply
 			{
 				uint8_t byte_ = WDTCSR_ ::Get();
 				byte_ &= ~((1<<5)|(1<<2)|(1<<0));
@@ -207,7 +209,7 @@ namespace MCU
 				WDTCSR_ ::Set(byte_);
 			}
 		
-			void set_16348(void)				//128ms at 5v power supply
+			static void set_16348(void)				//128ms at 5v power supply
 			{
 				uint8_t byte_ = WDTCSR_ ::Get();
 				byte_ &= ~((1<<5)|(1<<2));
@@ -216,7 +218,7 @@ namespace MCU
 				WDTCSR_ ::Set(byte_);
 			}
 		
-			void set_32768(void)				//256ms at 5v power supply
+			static void set_32768(void)				//256ms at 5v power supply
 			{
 				uint8_t byte_ = WDTCSR_ ::Get();
 				byte_ &= ~((1<<5)|(1<<1)|(1<<0));
@@ -225,7 +227,7 @@ namespace MCU
 				WDTCSR_ ::Set(byte_);
 			}
 		
-			void set_65536(void)				//512ms at 5v power supply
+			static void set_65536(void)				//512ms at 5v power supply
 			{
 				uint8_t byte_ = WDTCSR_ ::Get();
 				byte_ &= ~((1<<5)|(1<<1));
@@ -234,7 +236,7 @@ namespace MCU
 				WDTCSR_ ::Set(byte_);
 			}
 			
-			void set_131072(void)				//1024ms at 5v power supply
+			static void set_131072(void)				//1024ms at 5v power supply
 			{
 				uint8_t byte_ = WDTCSR_ ::Get();
 				byte_ &= ~((1<<5)|(1<<0));
@@ -243,7 +245,7 @@ namespace MCU
 				WDTCSR_ ::Set(byte_);
 			}
 		
-			void set_262144(void)				//2048ms at 5v power supply
+			static void set_262144(void)				//2048ms at 5v power supply
 			{
 				uint8_t byte_ = WDTCSR_ ::Get();
 				byte_ &= ~(1<<5);
@@ -252,7 +254,7 @@ namespace MCU
 				WDTCSR_ ::Set(byte_);
 			}
 		
-			void set_524288(void)				//4096ms at 5v power supply
+			static void set_524288(void)				//4096ms at 5v power supply
 			{
 				uint8_t byte_ = WDTCSR_ ::Get();
 				byte_ &= ~((1<<2)|(1<<1)|(1<<0));
@@ -261,7 +263,7 @@ namespace MCU
 				WDTCSR_ ::Set(byte_);
 			}
 		
-			void set_1048576(void)				//8192ms at 5v power supply
+			static void set_1048576(void)				//8192ms at 5v power supply
 			{
 				uint8_t byte_ = WDTCSR_ ::Get();
 				byte_ &= ~((1<<2)|(1<<1));
@@ -274,7 +276,7 @@ namespace MCU
 		namespace Mode
 		{
 			//WDT Configurations if WDTON fuse bit is not set
-			void stop(void)
+			static void stop(void)
 			{
 				uint8_t byte_ = WDTCSR_ ::Get();
 				byte_ &= ~((1<<6)|(1<<3));
@@ -282,7 +284,7 @@ namespace MCU
 				WDTCSR_ ::Set(byte_);
 			}
 		
-			void interrupt(void)
+			static void interrupt(void)
 			{
 				uint8_t byte_ = WDTCSR_ ::Get();
 				byte_ &= ~(1<<3);
@@ -291,7 +293,7 @@ namespace MCU
 				WDTCSR_ ::Set(byte_);
 			}
 		
-			void SystemReset(void)
+			static void SystemReset(void)
 			{
 			uint8_t byte_ = WDTCSR_ ::Get();
 			byte_ &= ~(1<<6);
@@ -300,7 +302,7 @@ namespace MCU
 			WDTCSR_ ::Set(byte_);
 			}
 		
-			void Interrupt_And_SystemReset(void)
+			static void Interrupt_And_SystemReset(void)
 			{
 				uint8_t byte_ = WDTCSR_ ::Get();
 				byte_ |= ((1<<6)|(1<<3));
@@ -560,9 +562,9 @@ namespace MCU
 			}
 			
 			//Overflow interrupt enable
-			void Ovf_Int_Enable(void){TIMSK2_::SetBit(0);}
+			static void Ovf_Int_Enable(void){TIMSK2_::SetBit(0);}
 			//Overflow interrupt disable
-			void Ovf_Int_Disable(void){TIMSK2_::ClearBit(0);}
+			static void Ovf_Int_Disable(void){TIMSK2_::ClearBit(0);}
 			
 		}// end Timer-counter 2 8bit
 	}//end Timer_counters
@@ -674,7 +676,7 @@ namespace MCU
 		//Digital input disable register 1
 		struct DIDR1_ : public RegisterBase<0x7f> {};
 		
-		void digital_Input_Enable(uint8_t ac_pin_number)
+		static void digital_Input_Enable(uint8_t ac_pin_number)
 		{
 			if ((ac_pin_number == 0) || (ac_pin_number == 1))
 			{
@@ -683,7 +685,7 @@ namespace MCU
 			else return;
 		}
 		
-		void digital_Input_Disable(uint8_t ac_pin_number)
+		static void digital_Input_Disable(uint8_t ac_pin_number)
 		{
 			if ((ac_pin_number == 0) || (ac_pin_number == 1))
 			{
@@ -721,7 +723,7 @@ namespace MCU
 		//Digital input disable register 0
 		struct DIDR0_ : public RegisterBase<0x7e> {};
 		
-		void digital_Input_Disable(uint8_t adc_pin_number)
+		static void digital_Input_Disable(uint8_t adc_pin_number)
 		{
 			if ((adc_pin_number >= 0) && (adc_pin_number <= 5))
 			{
@@ -730,7 +732,7 @@ namespace MCU
 			else return;
 		}
 		
-		void digital_Input_Enable(uint8_t adc_pin_number)
+		static void digital_Input_Enable(uint8_t adc_pin_number)
 		{
 			if ((adc_pin_number >= 0) && (adc_pin_number <= 5))
 			{
@@ -780,4 +782,4 @@ namespace MCU
 	
 }// Atmega168 MicroController Unit 
 
-#endif //_MCU_Mega168_HPP
+//#endif //_MCU_Mega168_HPP

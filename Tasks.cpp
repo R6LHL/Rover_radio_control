@@ -9,6 +9,7 @@ void Tasks::checkJoystick(void){
 	OS.SetTask_(printJoystick, 0);
 	OS.SetTask_(transmitTelemetry,0);
 	OS.SetTask_(checkJoystick, JOYSTICK_READ_INTERVAL);
+  MCU::Sleep_::Enable();
 }
 //////////////////////////////////////////////////////////////////////////////
 
