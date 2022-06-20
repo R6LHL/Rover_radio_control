@@ -1,8 +1,6 @@
-#include "MCU_Mega_328.hpp"
+#include "MCU_Mega_168.hpp"
 #include <LoRa.h> // API https://github.com/sandeepmistry/arduino-LoRa/blob/master/API.md
 #include "Tasks.h"
-#include "variables.h"
-#include "TaskManager.h"
 
 Joystick joystick(JOYSTICK_X_AXIS_PIN, JOYSTICK_Y_AXIS_PIN, 
                     JOYSTICK_BUTTON_PIN, JOYSTICK_DEAD_ZONE_X,
@@ -12,13 +10,17 @@ int currX = 0;
 int currY = 0;
 bool currButton = false;
 
-////////////////////INTERRUT HANDLERS////////////
+TaskManager5 OS;
+
+////////////////////INTERRUPT HANDLERS////////////
+#ifdef USE_TC2_FOR_OS
 ISR(TIMER2_OVF_vect)
 {
   //Serial.println("Interrupt is working");
-  TaskManager::TimerTaskService_();
+  OS.TimerTaskService_();
 }
-////////////////////INTERRUT HANDLERS ENDS////////////
+#endif
+////////////////////INTERRUPT HANDLERS ENDS////////////
 
 void setup() {
 
@@ -28,10 +30,22 @@ void setup() {
 #if DEBUG_MODE == ENABLED  
   Serial.print(F("Setup timers...\0"));
 #endif
+
+#ifdef USE_TC2_FOR_OS  
+  MCU::TC::TC2_::SetPrescaler64();
+  MCU::TC::TC2_::Ovf_Int_Enable();
+  MCU::TC::TC2_::powerUp();
+#endif
+
+#ifdef USE_WDT_FOR_OS
+
+#endif
+
   
-  TCCR2B |= (1<<CS22); // (clk/64)
-  TIMSK2 |= (1<<TOIE2); // ovf interrupt enabled
-  
+  MCU::IO_::PORTB_::pullupAll();
+  MCU::IO_::PORTC_::pullupAll();
+  MCU::IO_::PORTD_::pullupAll();  
+    
 #if DEBUG_MODE == ENABLED 
   Serial.println(F("Done!\0"));
   Serial.println();
@@ -65,5 +79,5 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  TaskManager::ProcessTaskQueue_();
+  OS.ProcessTaskQueue_();
 }

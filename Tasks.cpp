@@ -1,18 +1,14 @@
 #include "Tasks.h"
-
-#include <Arduino.h>
-#include "config.h"
-#include "variables.h"
-#include <LoRa.h> // API https://github.com/sandeepmistry/arduino-LoRa/blob/master/API.md
+#include "TaskManager.h"
 
 void Tasks::checkJoystick(void){
 	currX = joystick.readX();
 	currY = joystick.readY();
 	currButton = joystick.readButton();
 
-	TaskManager::SetTask_(printJoystick, 0);
-	TaskManager::SetTask_(transmitTelemetry,0);
-	TaskManager::SetTask_(checkJoystick, JOYSTICK_READ_INTERVAL_MS);
+	OS.SetTask_(printJoystick, 0);
+	OS.SetTask_(transmitTelemetry,0);
+	OS.SetTask_(checkJoystick, JOYSTICK_READ_INTERVAL);
 }
 //////////////////////////////////////////////////////////////////////////////
 
